@@ -13,7 +13,7 @@
 - [x] 특정 메뉴의 `MenuType`이 매개변수의 메뉴와 같은지 확인하는 로직
 
 ### `Discount` 인터페이스
-- 할인에 대한 인터페이스
+- [x] 할인에 대한 인터페이스
 - `checkDiscount` 정의됨
 - `BenefitResult` 반환
   - `BenefitResult` : {"혜택내용", "혜택가격"}
