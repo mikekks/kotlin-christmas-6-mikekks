@@ -33,7 +33,7 @@
 
 ### `Badge` enum 
 - [금액, "등급이름"]
-- [ ] {별, 트리, 산타, 없음} 으로 구성하기
+- [X] {별, 트리, 산타, 없음} 으로 구성하기
 
 ### `OrderDTO`
 - 주문 정보를 혜택 객체에게 전달하기 위한 DTO
@@ -46,7 +46,7 @@
   - [x] MenuList 검증 로직
 
 ### OutputView
-- [ ] 파라미터 : `OrderDTO`, `List<BenefitResult>` 
+- [X] 파라미터 : `OrderDTO`, `List<BenefitResult>` 
 - 혜택 전 상태 출력 로직
   - [ ] 메뉴리스트 출력
   - [ ] 혜택 전 총 금액 출력
