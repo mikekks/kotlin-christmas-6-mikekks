@@ -40,10 +40,10 @@
 
 # 입출력
 ### inputView
-- [ ] 날짜 정보를 `LocalDate`로 변환 기능
-  - [ ] 날짜 정보 검증 로직
-- [ ] MenuList `HashMap`으로 변환 기능
-  - [ ] MenuList 검증 로직
+- [x] 날짜 정보를 `LocalDate`로 변환 기능
+  - [x] 날짜 정보 검증 로직
+- [x] MenuList `HashMap`으로 변환 기능
+  - [x] MenuList 검증 로직
 
 ### OutputView
 - [ ] 파라미터 : `OrderDTO`, `List<BenefitResult>` 
