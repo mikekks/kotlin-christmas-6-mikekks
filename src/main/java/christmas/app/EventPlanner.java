@@ -2,15 +2,14 @@ package christmas.app;
 
 import christmas.Prompt.InputView;
 import christmas.Prompt.OutputView;
-import christmas.domain.Benefits.BenefitResult;
-import christmas.domain.Benefits.Discount;
-import christmas.domain.OrderDTO;
-import christmas.global.enums.Benefit;
+import christmas.domain.benefits.BenefitFactory;
+import christmas.domain.benefits.discount.Discount;
+import christmas.domain.order.Order;
+import christmas.domain.order.OrderDTO;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 public class EventPlanner {
     public void startOrder(){
@@ -18,10 +17,8 @@ public class EventPlanner {
         Map<String, Integer> orderList = InputView.inputOrder();
         OrderDTO orderDTO = new OrderDTO(visitDate, orderList);
 
-        List<BenefitResult> benefitResults = Arrays.stream(Benefit.values()).map(x -> x.checkDiscount(orderDTO))
-                .filter(x -> x != null)
-                .collect(Collectors.toList());
+        List<Discount> benefitResults = BenefitFactory.getDiscountList(orderDTO);
 
-        OutputView.printEventBenefits(orderDTO, benefitResults);
+        OutputView.printEventBenefits(new Order(benefitResults, orderDTO));
     }
 }

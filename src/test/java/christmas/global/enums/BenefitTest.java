@@ -1,14 +1,18 @@
 package christmas.global.enums;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import christmas.domain.Benefits.BenefitResult;
-import christmas.domain.OrderDTO;
+import christmas.domain.benefits.BenefitFactory;
+import christmas.domain.benefits.discount.Discount;
+import christmas.domain.benefits.discount.PresentEvent;
+import christmas.domain.benefits.discount.SpecialDiscount;
+import christmas.domain.benefits.discount.WeekDayDiscount;
+import christmas.domain.benefits.discount.WeekEndDiscount;
+import christmas.domain.benefits.present.Present;
+import christmas.domain.order.OrderDTO;
 import java.time.LocalDate;
 import java.util.HashMap;
-import org.assertj.core.api.Assertions;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +24,7 @@ class BenefitTest {
     OrderDTO orderDTO_NOT_CHRISTMAS;
     OrderDTO orderDTO_NOT_SPECIAL;
     OrderDTO orderDTO_NOT_DESSERT;
-
+    List<Discount> discountList;
 
     @BeforeEach
     void beforeEach() {
@@ -40,59 +44,74 @@ class BenefitTest {
 
     @Test
     void 크리스마스_디데이_할인Test(){
-        BenefitResult benefitResult = Benefit.크리스마스_디데이_할인.checkDiscount(orderDTO1);
-        assertThat(benefitResult).isNotNull();
+        List<Discount> discountList1 = BenefitFactory.getDiscountList(orderDTO1);
+        Discount discount = discountList1.stream().filter(x -> x.getDiscountAmount(orderDTO1).getAmount() == 3300)
+                .findAny().orElse(null);
 
-        BenefitResult benefitResult2 = Benefit.크리스마스_디데이_할인.checkDiscount(orderDTO_NOT_CHRISTMAS);
-        assertThat(benefitResult2).isNull();
+        assertThat(discount).isNotNull();
+
+        List<Discount> discountList2 = BenefitFactory.getDiscountList(orderDTO_NOT_CHRISTMAS);
+        Discount discount2 = discountList2.stream().filter(x -> x.getDiscountAmount(orderDTO_NOT_CHRISTMAS).getAmount() == 3300)
+                .findAny().orElse(null);
+
+        assertThat(discount2).isNull();
     }
 
     @Test
     void 특별_할인Test(){
-        BenefitResult benefitResult = Benefit.특별_할인.checkDiscount(orderDTO1);
-        assertThat(benefitResult).isNotNull();
-        assertThat(benefitResult.getAmount()).isEqualTo(1000);
+        Discount specialDiscount = new SpecialDiscount();
+        Discount discount = specialDiscount.checkDiscount(orderDTO1);
+        assertThat(discount).isNotNull();
+        assertThat(discount.getDiscountAmount(orderDTO1).getAmount()).isEqualTo(1000);
 
-        BenefitResult benefitResult2 = Benefit.특별_할인.checkDiscount(orderDTO_NOT_SPECIAL);
-        assertThat(benefitResult2).isNull();
+        SpecialDiscount specialDiscount2 = new SpecialDiscount();
+        Discount discount2 = specialDiscount2.checkDiscount(orderDTO_NOT_SPECIAL);
+        assertThat(discount2).isNull();
     }
     @Test
     void 평일_할인Test(){
-        BenefitResult benefitResult = Benefit.평일_할인.checkDiscount(orderDTO1);
-        assertThat(benefitResult).isNotNull();
-        assertThat(benefitResult.getAmount()).isEqualTo(2023);
+        Discount discount = new WeekDayDiscount();
+        discount = discount.checkDiscount(orderDTO1);
+        assertThat(discount).isNotNull();
+        assertThat(discount.getDiscountAmount(orderDTO1).getAmount()).isEqualTo(2023);
 
-        BenefitResult benefitResult2 = Benefit.평일_할인.checkDiscount(orderDTO_NOT_SPECIAL);
-        assertThat(benefitResult2).isNull();
+        discount = discount.checkDiscount(orderDTO_NOT_SPECIAL);
+        assertThat(discount).isNull();
 
     }
 
     @Test
     void 평일_할인_디저트없음Test(){
-        BenefitResult benefitResult3 = Benefit.평일_할인.checkDiscount(orderDTO_NOT_DESSERT);
-        assertThat(benefitResult3).isNull();
+        Discount discount = new WeekDayDiscount();
+        discount = discount.checkDiscount(orderDTO_NOT_DESSERT);
+        assertThat(discount).isNull();
 
     }
 
     @Test
     void 주말_할인Test(){
-        BenefitResult benefitResult = Benefit.주말_할인.checkDiscount(orderDTO1);
-        assertThat(benefitResult).isNull();
+        Discount discount = new WeekEndDiscount();
+        discount = discount.checkDiscount(orderDTO1);
+        assertThat(discount).isNull();
 
-        BenefitResult benefitResult2 = Benefit.주말_할인.checkDiscount(orderDTO_NOT_SPECIAL);
-        assertThat(benefitResult2).isNotNull();
-        assertThat(benefitResult2.getAmount()).isEqualTo(2023);
+        Discount discount2 = new WeekEndDiscount();
+        discount2 = discount2.checkDiscount(orderDTO_NOT_SPECIAL);
+        assertThat(discount2).isNotNull();
+        assertThat(discount2.getDiscountAmount(orderDTO_NOT_SPECIAL).getAmount()).isEqualTo(4046);
     }
 
     @Test
     void 증정_이벤트Test(){
-        BenefitResult benefitResult = Benefit.증정_이벤트.checkDiscount(orderDTO1);
-        assertThat(benefitResult).isNotNull();
-        assertThat(benefitResult.getAmount()).isEqualTo(25000);
-        assertThat(benefitResult.getBenefit().getFreeGift().getMenu()).isEqualTo(Menu.CHAMPAGNE.getName());
+        PresentEvent discount = new PresentEvent();
+        Discount discount1 = discount.checkDiscount(orderDTO1);
+        assertThat(discount1).isNotNull();
+        assertThat(discount).isInstanceOf(Present.class);
+        assertThat(discount.getDiscountAmount(orderDTO1).getAmount()).isEqualTo(25000);
+        assertThat(discount.getPresentAmount().getName()).isEqualTo(Menu.CHAMPAGNE.getName());
 
-        BenefitResult benefitResult2 = Benefit.증정_이벤트.checkDiscount(orderDTO_NOT_DESSERT);
-        assertThat(benefitResult2).isNull();
+        PresentEvent discount2 = new PresentEvent();
+        Discount discount3 = discount2.checkDiscount(orderDTO_NOT_DESSERT);
+        assertThat(discount3).isNull();
 
     }
 

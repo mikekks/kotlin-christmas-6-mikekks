@@ -4,7 +4,7 @@
 - 전체적인 흐름 담당하는 클래스
 - [x] 입출력 요청
 - [x] 주문 DTO 만드는 로직
-- [x] 주문정보를 각각의 혜택 로직에 보내는 로직
+- [x] 팩토리 메서드 호출 로직
 
 ### `Menu` enum
 - ["이름", 금액, `MenuType`]
@@ -14,29 +14,31 @@
 
 ### `Discount` 인터페이스
 - [x] 할인에 대한 인터페이스
-- `checkDiscount` 정의됨
-- `BenefitResult` 반환
-  - `BenefitResult` : {"혜택내용", "혜택가격"}
+- `checkDiscount` : 해당 정책을 사용해도 되는지 확인, 사용가능하면 해당 인터페이스 반환
+- `getDiscountAmount`
+  - 할인 내용과 할인 금액 반환
+  - `BenefitResult` 반환 : {"혜택내용", "혜택가격"}
 
-### `Benefit` enum
-- ["혜택내용", "혜택양", `BenefitType`, (증정이벤트일시, 증정품목) `Menu`]
-- `BenefitType` : 할인, 증정
-- 각각의 상수마다 다른 혜택 로직 구현
+### `BenefitFactory`
+- [x] AppConfig와 같이 할인 정책을 모두 저장하는 기능
+- [x] 주문정보에 적용되는 할인 구현체들을 `List<Discount>`로 만드는 기능
+
+
+### `Discount` 구현체
+- 각각의 구현체마다 다른 혜택 로직 구현
   - [x] 크리스마스 디데이 할인
   - [x] 특별 할인
-  - [x] 평일 할인
-  - [x] 주말 할인
-  - [x] 증정 이벤트
-    -  `FreeGift` class : [증정품목, 갯수]
-    - 증정 이벤트의 경우, 상수에 `FreeGift`도 정의됨
-    - [x] (Menu.CHAMPAGNE, 1) 반환 기능
+  - [x] 평일 할인 : 추가로 디저트 메뉴가 있는지도 확인
+  - [x] 주말 할인 : 추가로 메인 메뉴가 있는지도 확인
+  - [x] 증정 이벤트 : Present를 추가로 implements 한다.
+    -  `getPresentAmount` : 증정 상품과 갯수를 반
 
 ### `Badge` enum 
 - [금액, "등급이름"]
 - [X] {별, 트리, 산타, 없음} 으로 구성하기
 
 ### `OrderDTO`
-- 주문 정보를 혜택 객체에게 전달하기 위한 DTO
+- 주문 정보를 혜택 구현체에게 전달하기 위한 DTO
 
 # 입출력
 ### inputView
@@ -46,7 +48,7 @@
   - [x] MenuList 검증 로직
 
 ### OutputView
-- [X] 파라미터 : `OrderDTO`, `List<BenefitResult>` 
+- [X] 파라미터 : `Order` 
 - 혜택 전 상태 출력 로직
   - [x] 메뉴리스트 출력
   - [x] 혜택 전 총 금액 출력

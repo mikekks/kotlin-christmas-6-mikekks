@@ -1,123 +1,47 @@
 package christmas.Prompt;
 
 import static christmas.global.GuildMessage.*;
-import static java.text.NumberFormat.getInstance;
-
-import christmas.domain.Benefits.BenefitResult;
-import christmas.domain.OrderDTO;
-import christmas.global.enums.Badge;
-import christmas.global.enums.BenefitType;
-import christmas.global.enums.Menu;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import christmas.domain.order.Order;
 
 public class OutputView {
-    public static void printEventBenefits(OrderDTO orderDTO, List<BenefitResult> benefitResults) {
+    public static void printEventBenefits(Order order) {
         System.out.println(PRINT_EVENT_BENEFITS);
 
-        printBeforeBenefit(orderDTO);
-        printFreeGiftMenu(benefitResults);
-        printAfterBenefit(orderDTO, benefitResults);
+        printBeforeBenefit(order);
+        printFreeGiftMenu(order);
+        printAfterBenefit(order);
     }
 
-    private static void printBeforeBenefit(OrderDTO orderDTO) {
+    private static void printBeforeBenefit(Order order) {
         System.out.println();
         System.out.println(PRINT_ORDER_MENUS);
-        System.out.print(menuListToString(orderDTO));
-        System.out.println();
+        System.out.println(order.getOrderListToString());
+
         System.out.println(PRINT_BEFORE_ORDER_PRICE);
-        System.out.println(getInstance().format(totalOrderPrice(orderDTO)) + WON);
+        System.out.println(order.getTotalPriceToString());
     }
 
-    private static void printFreeGiftMenu(List<BenefitResult> benefitResults) {
+    private static void printFreeGiftMenu(Order order) {
         System.out.println();
         System.out.println(PRINT_FREE_GIFT_MENU);
-        boolean isNone = true;
-
-        for(BenefitResult benefitResult : benefitResults){
-            if(benefitResult.getBenefit().getBenefitType() == BenefitType.PRESENT){
-                System.out.println(benefitResult.getBenefit().getFreeGift().getMenu() + BLANK + benefitResult.getBenefit().getFreeGift().getCount());
-                isNone = false;
-            }
-        }
-
-        if(isNone){
-            System.out.println(NONE);
-        }
+        System.out.println(order.getFreeGiftListToString());
     }
 
-    private static void printAfterBenefit(OrderDTO orderDTO, List<BenefitResult> benefitResults) {
-        printBenefitDetails(benefitResults);
-        printTotalBenefit(benefitResults);
-        printAfterDiscount(orderDTO, benefitResults);
-        printEventBadge(benefitResults);
-    }
-
-    private static void printBenefitDetails(List<BenefitResult> benefitResults) {
+    private static void printAfterBenefit(Order order) {
         System.out.println();
         System.out.println(PRINT_BENEFIT_DETAILS);
-        if(benefitResults.size() == 0){
-            System.out.println(NONE);
-            return;
-        }
+        System.out.println(order.getBenefitDetailToString());
 
-        for(BenefitResult discount : benefitResults){
-            System.out.println(discount.getBenefit().getName() + ": -" + getInstance().format(discount.getAmount()) + WON);
-        }
-    }
-    private static void printTotalBenefit(List<BenefitResult> benefitResults) {
         System.out.println();
         System.out.println(PRINT_TOTAL_BENEFIT_DETAIL);
+        System.out.println(order.getTotalBenefitToString());
 
-        Integer totalBenefit = 0;
-        for(BenefitResult discount : benefitResults){
-            totalBenefit -= discount.getAmount();
-        }
-        System.out.println(getInstance().format(totalBenefit) + WON);
-    }
-    private static void printAfterDiscount(OrderDTO orderDTO, List<BenefitResult> benefitResults) {
         System.out.println();
         System.out.println(PRINT_AFTER_ORDER_PRICE);
-        Integer totalBenefit = 0;
-        for(BenefitResult benefitResult : benefitResults){
-            if(benefitResult.getBenefit().getBenefitType() == BenefitType.PRESENT){
-                continue;
-            }
-            totalBenefit += benefitResult.getAmount();
-        }
+        System.out.println(order.getAfterDiscountTotalPriceToString());
 
-        System.out.println(getInstance().format(totalOrderPrice(orderDTO) - totalBenefit) + WON);
-    }
-    private static void printEventBadge(List<BenefitResult> benefitResults) {
         System.out.println();
         System.out.println(PRINT_EVENT_BADGE);
-        Integer totalBenefit = 0;
-        for(BenefitResult benefitResult : benefitResults){
-            totalBenefit += benefitResult.getAmount();
-        }
-
-        System.out.println(Badge.getBadge(totalBenefit).getName());
-    }
-
-    private static String menuListToString(OrderDTO orderDTO){
-        Map<String, Integer> menuList = orderDTO.getMenuList();
-
-        String menuListString = "";
-        for(Map.Entry<String, Integer> entry : menuList.entrySet()){
-            menuListString += entry.getKey() + BLANK + entry.getValue() + COUNT + NEXT_LINE;
-        }
-        return menuListString;
-    }
-
-    private static Integer totalOrderPrice(OrderDTO orderDTO){
-        Map<String, Integer> menuList = orderDTO.getMenuList();
-        Integer totalOrderPrice = 0;
-        for(Map.Entry<String, Integer> entry : menuList.entrySet()){
-            Menu menu = Menu.getMenu(entry.getKey());
-            totalOrderPrice += (menu.getPrice() * entry.getValue());
-        }
-
-        return totalOrderPrice;
+        System.out.println(order.getBadgeToString());
     }
 }

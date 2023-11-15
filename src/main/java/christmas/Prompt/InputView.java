@@ -17,23 +17,16 @@ public class InputView {
         System.out.println(REQUEST_VISIT_DATE);
         String inputDate = Console.readLine();
         LocalDate visitDate = null;
+
         try{ // validation
             Integer date = Integer.parseInt(inputDate);
             visitDate = LocalDate.of(2023, 12, date);
-            validateVisitDate(visitDate);
         }catch(IllegalArgumentException e){
             System.out.println(INVALID_DATE_FORMAT);
             visitDate = inputVisitDate();
         }
 
         return visitDate;
-    }
-
-    private static void validateVisitDate(LocalDate date){
-//        if(date.){
-//            throw new IllegalArgumentException();
-//        }
-
     }
 
     public static Map<String, Integer> inputOrder(){
@@ -50,7 +43,7 @@ public class InputView {
         return menuList;
     }
 
-    // 수정 필요
+
     private static void validateMenuList(String order, Map<String, Integer> menuList){
         String[] split = order.split(",");
         for(String s : split){
