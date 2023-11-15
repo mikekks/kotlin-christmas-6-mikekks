@@ -12,7 +12,7 @@ public class SpecialDiscount implements Discount{
     @Override
     public Discount checkDiscount(OrderDTO orderDTO) {
         Integer integer = discountDay.stream()
-                .filter(x -> x == orderDTO.getVisitDate().getDayOfMonth())
+                .filter(x -> x == orderDTO.visitDate().getDayOfMonth())
                 .findAny().orElse(null);
         if (integer == null) {
             return null;

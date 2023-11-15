@@ -4,16 +4,10 @@ import christmas.global.enums.Menu;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class OrderDTO {
-
-    private LocalDate visitDate;
-    private Map<String, Integer> menuList;
-
-    public OrderDTO(LocalDate visitDate, Map<String, Integer> menuList) {
-        this.visitDate = visitDate;
-        this.menuList = menuList;
-    }
-
+public record OrderDTO(
+        LocalDate visitDate,
+        Map<String, Integer> menuList
+) {
     public Integer getTotalPrice(){
         Integer totalPrice = 0;
         for(Map.Entry<String, Integer> entry : menuList.entrySet()){
@@ -21,14 +15,4 @@ public class OrderDTO {
         }
         return totalPrice;
     }
-
-    public LocalDate getVisitDate() {
-        return visitDate;
-    }
-
-    public Map<String, Integer> getMenuList() {
-        return menuList;
-    }
-
-
 }

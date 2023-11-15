@@ -9,7 +9,7 @@ public class ChristMasDayDiscount implements Discount{
     private Integer amount = 1000;
     @Override
     public Discount checkDiscount(OrderDTO orderDTO) {
-        if(orderDTO.getVisitDate().isAfter(LocalDate.of(2023, 12, 25))) {
+        if(orderDTO.visitDate().isAfter(LocalDate.of(2023, 12, 25))) {
             return null;
         }
         return this;
@@ -17,7 +17,7 @@ public class ChristMasDayDiscount implements Discount{
 
     @Override
     public BenefitResult getDiscountAmount(OrderDTO orderDTO) {
-        int date = orderDTO.getVisitDate().minusDays(1).getDayOfMonth();
+        int date = orderDTO.visitDate().minusDays(1).getDayOfMonth();
         Integer discountPrice = (date * 100) + amount;
         return new BenefitResult(name, discountPrice);
     }

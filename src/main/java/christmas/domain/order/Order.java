@@ -25,7 +25,7 @@ public class Order {
 
     public String getOrderListToString(){
         String menuListString = "";
-        for(Map.Entry<String, Integer> entry : orderDTO.getMenuList().entrySet()){
+        for(Map.Entry<String, Integer> entry : orderDTO.menuList().entrySet()){
             menuListString += entry.getKey() + BLANK + entry.getValue() + COUNT + NEXT_LINE;
         }
         return menuListString;

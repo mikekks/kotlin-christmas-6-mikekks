@@ -15,10 +15,7 @@ public class PresentEvent implements Discount, Present {
 
     @Override
     public Discount checkDiscount(OrderDTO orderDTO) {
-        Map<String, Integer> menuList = orderDTO.getMenuList();
-
         Integer totalOrderPrice = orderDTO.getTotalPrice();
-
 
         if(totalOrderPrice < PRESENT_CONDITION) {
             return null;

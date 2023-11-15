@@ -16,7 +16,7 @@ public class WeekEndDiscount implements Discount{
     int cnt = 0;
     @Override
     public Discount checkDiscount(OrderDTO orderDTO) {
-        DayOfWeek dayOfWeek = orderDTO.getVisitDate().getDayOfWeek();
+        DayOfWeek dayOfWeek = orderDTO.visitDate().getDayOfWeek();
         if(dayOfWeek != FRIDAY && dayOfWeek != SATURDAY){
             return null;
         }
@@ -34,7 +34,7 @@ public class WeekEndDiscount implements Discount{
     }
 
     private void getSatisfiedCnt(OrderDTO orderDTO) {
-        for(Map.Entry<String, Integer> entry : orderDTO.getMenuList().entrySet()){
+        for(Map.Entry<String, Integer> entry : orderDTO.menuList().entrySet()){
             if(Menu.getSpecifiedMenu(entry.getKey(), MenuType.MAIN) == null){
                 continue;
             }
